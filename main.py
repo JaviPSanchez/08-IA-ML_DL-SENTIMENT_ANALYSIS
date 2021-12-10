@@ -67,27 +67,24 @@ with col6:
     twitter_form.markdown("<h2 style='text-align: center; width:20rem; color: white;  background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>TWITTER API</h2>", unsafe_allow_html=True)
     twitter_form.image('./assets/twitter.png', caption="Let's do some predictions!",  width=None, use_column_width=True)
     search_term = twitter_form.text_input("Search tweets!")
-    limit = twitter_form.slider('Select a range of tweeters',0, 100)
-    submit_button = twitter_form.form_submit_button("Search")
+    limit_tweets = twitter_form.slider('Select a range of tweeters',0, 100)
+    submit_button_twitter = twitter_form.form_submit_button("Search")
 
-    if submit_button:
-        # twitter_package.twitter.ApiTwitter(search_term, limit).run_api()
-        tweets_api = twitter_package.twitter.ApiTwitter(search_term, limit).run_api()
+    if submit_button_twitter:
+        tweets_api = twitter_package.twitter.ApiTwitter(search_term, limit_tweets).run_api_twitter()
         st.write(tweets_api)
-        # df_tweets = pd.read_csv('api_raw_tweets.csv', index_col=[0])
-        # st.write(df_tweets)
-
+        
 with col8:
     google_form = st.form("API_GOOGLE")
     google_form.markdown("<h2 style='text-align: center; width:20rem; color: white; background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>GOOGLE API</h2>", unsafe_allow_html=True)
     google_form.image('./assets/google.png', caption="Let's do some predictions!", width=None, use_column_width=True)
-    google_form.text_input("Search news!")
-    google_form.slider('Select a range of news',0, 100)
-    google_form.form_submit_button("Search")
+    google_search = google_form.text_input("Search news!")
+    date_article = google_form.date_input('Select date', value = pd.to_datetime('today'))
+    submit_button_google = google_form.form_submit_button("Search")
 
-    if submit_button:
-        pass
-        # google_package.google.main()
+    if submit_button_google:
+        news_api = google_package.google.ApiGoogleNews(google_search, date_article).run_api_google()
+        st.write(news_api)
 
 # ---------SECTION ANALYSIS------------ #
 
@@ -112,8 +109,8 @@ with col8:
         nlp_package.nlp.NlpApi(df_1)
     elif classifier_name == "KMEANS":
         kmeans_package.kmeans.Kmeans(df_1)
-    # elif classifier_name == "RNN":
-    #     st.write('hola')
+    elif classifier_name == "RNN":
+        st.write('Sorry, this method is not available')
     else:
         st.write('Choose a Method')
 
@@ -129,5 +126,13 @@ with col11:
         st.pyplot(fig_20)
     classifier_name = st.selectbox("Select Classifier", (" ","WORD CLOUD", "NLP-2", "KMEANS", "RNN"))
 
-
-
+    if classifier_name == 'WORD CLOUD':  
+        wc_package.wc.cloud(df_2)
+    elif classifier_name == "NLP":
+        nlp_package.nlp.NlpApi(df_2)
+    elif classifier_name == "KMEANS":
+        kmeans_package.kmeans.Kmeans(df_2)
+    elif classifier_name == "RNN":
+        st.write('Sorry, this method is not supported')
+    else:
+        st.write('Choose a Method')

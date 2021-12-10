@@ -4,8 +4,7 @@ import json
 import pandas as pd
 import time
 import streamlit as st
-       
-# tweety_bearer_token = os.environ.get("TWEETY_BEARER_TOKEN")
+
 
 class ApiTwitter:
     def __init__(self, query, num_tweets):
@@ -22,26 +21,24 @@ class ApiTwitter:
                 'max_results': self.num_tweets,
                }
     
-    def run_api(self):
+    def run_api_twitter(self):
         self.headers = self.create_headers()
         self.respond_endpoint = self.connect_to_endpoint()
         self.get_tweeters = self.get_tweets()
         self.tweets = self.tweets()
         self.tweets_pandas = pd.json_normalize(self.tweets)
-        # return self.tweets
         return self.tweets_pandas
 
     def create_headers(self):
         headers = {"Authorization": "Bearer {}".format(self.tweety_bearer_token)}
         return headers
        
-
     def connect_to_endpoint(self, next_token=None):
         if next_token:
             self.params['next_token'] = next_token
         response = requests.request("GET", self.search_url, headers=self.headers, params=self.query_params)
         time.sleep(3.1)
-        print(response.status_code)
+        st.write(response.status_code)
         if response.status_code != 200:
             raise Exception(response.status_code, response.text)
         return response.json()
@@ -78,8 +75,4 @@ class ApiTwitter:
                 tweets.append(self.tweet)
         f.close()   
         return tweets
-   
-
-# df = pd.DataFrame(out_file)
-# df.to_csv('raw_tweets.csv')
 
