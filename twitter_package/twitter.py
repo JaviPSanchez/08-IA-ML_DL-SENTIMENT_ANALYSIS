@@ -21,13 +21,15 @@ class ApiTwitter:
                 'expansions': 'author_id',
                 'max_results': self.num_tweets,
                }
+    
+    def run_api(self):
         self.headers = self.create_headers()
         self.respond_endpoint = self.connect_to_endpoint()
-        self.get_tweeters = self.get_tweets(self.out_file)
+        self.get_tweeters = self.get_tweets()
         self.tweets = self.tweets()
-        # self.output_fh = self.f
-        return self.tweets
-
+        self.tweets_pandas = pd.json_normalize(self.tweets)
+        # return self.tweets
+        return self.tweets_pandas
 
     def create_headers(self):
         headers = {"Authorization": "Bearer {}".format(self.tweety_bearer_token)}
@@ -44,34 +46,37 @@ class ApiTwitter:
             raise Exception(response.status_code, response.text)
         return response.json()
 
-    def get_tweets(self, output_fh):
-        self.next_token = None
-        tweets_stored = 0
-        while tweets_stored < self.num_tweets:
-            self.headers = self.create_headers()
-            json_response = self.connect_to_endpoint()
-            if json_response['meta']['result_count'] == 0:
-                break
-            author_dict = {x['id']: x['username'] for x in json_response['includes']['users']}
-            for tweet in json_response['data']:
+    def get_tweets(self):
+        with open(self.out_file, 'w') as output_fh:
+            self.next_token = None
+            tweets_stored = 0
+            while tweets_stored < self.num_tweets:
+                self.headers = self.create_headers()
+                json_response = self.connect_to_endpoint()
+                if json_response['meta']['result_count'] == 0:
+                    break
+                author_dict = {x['id']: x['username'] for x in json_response['includes']['users']}
+                for tweet in json_response['data']:
+                    try:
+                        tweet['username'] = author_dict[tweet['author_id']]
+                    except KeyError:
+                        print(f"No data for {tweet['author_id']}")
+                    output_fh.write(json.dumps(tweet) + '\n')
+                    tweets_stored += 1
                 try:
-                    tweet['username'] = author_dict[tweet['author_id']]
+                    self.next_token = json_response['meta']['next_token']
                 except KeyError:
-                    print(f"No data for {tweet['author_id']}")
-                output_fh.write(json.dumps(tweet) + '\n')
-                tweets_stored += 1
-            try:
-                self.next_token = json_response['meta']['next_token']
-            except KeyError:
-                break
-        return None
+                    break
+            return None
+        output_fh.close()
   
     def tweets(self):
         tweets = []
-        with open(self.out_file, 'w') as f:
+        with open(self.out_file, 'r') as f:
             for row in f.readlines():
                 self.tweet = json.loads(row)
                 tweets.append(self.tweet)
+        f.close()   
         return tweets
    
 

@@ -21,8 +21,8 @@ import nlp_package.nlp
 import kmeans_package.kmeans
 # ---------PAGE LAYOUT------------ #
 
-# st.set_page_config(page_title='Crypto Dash', layout="wide", initial_sidebar_state="collapsed", page_icon='random')
-# st.set_page_config(page_title='Crypto Dash', layout="wide")
+st.set_page_config(page_title='Crypto Dash', layout="wide", initial_sidebar_state="collapsed", page_icon='random')
+
 
 
 # ---------PAGE TITLE------------ #
@@ -41,7 +41,7 @@ with col3:
 
 col4, col5 = st.columns([2,4])
 with col4:
-    col4.markdown("<h2 style='text-align: center; color: white; background-color: black; border-radius:5rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>SELECT CRYPTO</h2>", unsafe_allow_html=True)
+    col4.markdown("<h2 style='text-align: center; color: white; background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>SELECT CRYPTO</h2>", unsafe_allow_html=True)
     tickers = ('BTC-USD', 'ETH-USD', 'BNB-USD', 'USDT-USD', 'SOL-USD', 'ADA-USD', 'USDC-USD', 'XRP-USD', 'DOT-USD', 'LUNA-USD', 'DOGE-USD')
     crypto = col4.multiselect('Select Cryto', tickers)
     start = col4.date_input('Start date', value = pd.to_datetime('2021-01-01'))
@@ -65,20 +65,24 @@ with col5:
 col6, col7, col8 = st.columns([3,1,3])
 with col6:
     twitter_form = st.form("API_TWITTER")
-    twitter_form.markdown("<h2 style='text-align: center; width:20rem; color: white;  background-color: black; border-radius:5rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>TWITTER API</h2>", unsafe_allow_html=True)
+    twitter_form.markdown("<h2 style='text-align: center; width:20rem; color: white;  background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>TWITTER API</h2>", unsafe_allow_html=True)
     twitter_form.image('./assets/twitter.png', caption="Let's do some predictions!",  width=None, use_column_width=True)
     search_term = twitter_form.text_input("Search tweets!")
     limit = twitter_form.slider('Select a range of tweeters',0, 100)
     submit_button = twitter_form.form_submit_button("Search")
 
     if submit_button:
-        twitter_package.twitter.ApiTwitter(search_term, limit)
-        df_tweets = pd.read_csv('api_raw_tweets.csv', index_col=[0])
-        st.write(df_tweets)
+        # twitter_package.twitter.ApiTwitter(search_term, limit).run_api()
+        tweets_api = twitter_package.twitter.ApiTwitter(search_term, limit).run_api()
+        st.write(tweets_api)
+        # df_tweets = pd.read_csv('api_raw_tweets.csv', index_col=[0])
+        # st.write(df_tweets)
+        
+
 
 with col8:
     google_form = st.form("API_GOOGLE")
-    google_form.markdown("<h2 style='text-align: center; width:20rem; color: white; background-color: black; border-radius:5rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>GOOGLE API</h2>", unsafe_allow_html=True)
+    google_form.markdown("<h2 style='text-align: center; width:20rem; color: white; background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>GOOGLE API</h2>", unsafe_allow_html=True)
     google_form.image('./assets/google.png', caption="Let's do some predictions!", width=None, use_column_width=True)
     google_form.text_input("Search news!")
     google_form.slider('Select a range of news',0, 100)
@@ -102,7 +106,7 @@ with col8:
         plt.title('Text lenght')
         st.pyplot(fig_8)
 
-    classifier_name = st.selectbox("Select Classifier", (" ","WORD CLOUD", "NLP", "KMEANS", "RNN"))
+    classifier_name = st.selectbox("Select Classifier", (" ","WORD CLOUD", "NLP-TextBlob", "KMEANS", "RNN"))
 
    
     if classifier_name == 'WORD CLOUD':  

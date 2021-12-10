@@ -12,9 +12,10 @@ import streamlit as st
 class Kmeans:
     def __init__(self, df, api=None):
         self.df = df
-        self.kmeans()
+        self.text, self.tfidf = self.kmeans()
         self.find_optimal_clusters()
-        self.mini_Batch_Kmeans()
+        self.clusters = self.mini_Batch_Kmeans()
+        self.labels = self.feature_names()
         self.plot_tsne_pca()
         self.get_top_keywords()
 
@@ -37,8 +38,8 @@ class Kmeans:
         iters = range(2, max_k+1, 2)
         sse = []
         for k in iters:
-            sse.append(MiniBatchKMeans(n_clusters=k, init_size=1024, batch_size=2048, random_state=20).fit(self.df).inertia_)
-            # print('Fit {} clusters'.format(k))
+            sse.append(MiniBatchKMeans(n_clusters=k, init_size=1024, batch_size=2048, random_state=20).fit(self.text).inertia_)
+            # st.write('Fit {} clusters'.format(k))
         fig_4, ax = plt.subplots(1, 1)    
         ax.plot(iters, sse, marker='o')
         ax.set_xlabel('Cluster Centers')
@@ -51,32 +52,35 @@ class Kmeans:
     
     def mini_Batch_Kmeans(self):
         clusters = MiniBatchKMeans(n_clusters=14, init_size=1024, batch_size=2048, random_state=20).fit_predict(self.text)
-        st.write(clusters)
         return clusters
 
     def plot_tsne_pca(self):
-        max_label = max(self.labels)
-        max_items = np.random.choice(range(self.df.shape[0]), size=3000, replace=True)
+        max_label = max(self.clusters)
+        max_items = np.random.choice(range(self.text.shape[0]), size=3000, replace=True)
         
-        pca = PCA(n_components=2).fit_transform(self.df[max_items,:].todense())
-        tsne = TSNE().fit_transform(PCA(n_components=27).fit_transform(self.df[max_items,:].todense()))
+        pca = PCA(n_components=2).fit_transform(self.text[max_items,:].todense())
+        tsne = TSNE().fit_transform(PCA(n_components=27).fit_transform(self.text[max_items,:].todense()))
         
         idx = np.random.choice(range(pca.shape[0]), size=100, replace=False)
-        label_subset = self.labels[max_items]
+        label_subset = self.clusters[max_items]
         label_subset = [cm.hsv(i/max_label) for i in label_subset[idx]]
         
-        fig_6, ax = plt.subplots(1, 2, figsize=(14, 6))
-        ax[0].scatter(pca[idx, 0], pca[idx, 1], c=label_subset)
-        ax[0].set_title('PCA Cluster Plot')
-        ax[1].scatter(tsne[idx, 0], tsne[idx, 1], c=label_subset)
-        ax[1].set_title('TSNE Cluster Plot')
+        # fig_6, ax = plt.subplots(1, 2, figsize=(14, 6))
+        fig_6, ax = plt.subplots(1, 1, figsize=(14, 6))
+        ax.scatter(pca[idx, 0], pca[idx, 1], c=label_subset)
+        ax.set_title('PCA Cluster Plot')
+        # ax[1].scatter(tsne[idx, 0], tsne[idx, 1], c=label_subset)
+        # ax[1].set_title('TSNE Cluster Plot')
         st.pyplot(fig_6)
-        return fig_6
+        fig_7, ax = plt.subplots(1,1, figsize=(14, 6))
+        ax.scatter(tsne[idx, 0], tsne[idx, 1], c=label_subset)
+        ax.set_title('TSNE Cluster Plot')
+        return fig_6, fig_7
     
 
     def get_top_keywords(self,n_terms=10):
-        self.df = pd.DataFrame(self.df.Clean_Tweets.todense()).groupby(self.clusters).mean()
-        for i,r in self.df.iterrows():
+        df = pd.DataFrame(self.text.todense()).groupby(self.clusters).mean()
+        for i,r in df.iterrows():
             st.write((f"Cluster: {i}"))
             st.write((','.join([self.labels[t] for t in np.argsort(r)[-n_terms:]])))
 
