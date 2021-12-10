@@ -34,7 +34,7 @@ class ApiTwitter:
         return headers
        
 
-    def connect_to_endpoint(self, next_token = None):
+    def connect_to_endpoint(self, next_token=None):
         if next_token:
             self.params['next_token'] = next_token
         response = requests.request("GET", self.search_url, headers=self.headers, params=self.query_params)

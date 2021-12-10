@@ -18,7 +18,7 @@ import twitter_package.twitter
 import google_package.google
 import wc_package.wc
 import nlp_package.nlp
-# import kmeans_package.kmeans
+import kmeans_package.kmeans
 # ---------PAGE LAYOUT------------ #
 
 # st.set_page_config(page_title='Crypto Dash', layout="wide", initial_sidebar_state="collapsed", page_icon='random')
@@ -108,9 +108,9 @@ with col8:
     if classifier_name == 'WORD CLOUD':  
         wc_package.wc.cloud(df_1)
     elif classifier_name == "NLP":
-        nlp_package.nlp.NLP_API(df_1)
-    # elif classifier_name == "KMEANS":
-    #     kmeans_package.kmeans.kmeans(df_1)
+        nlp_package.nlp.NlpApi(df_1)
+    elif classifier_name == "KMEANS":
+        kmeans_package.kmeans.Kmeans(df_1)
     # elif classifier_name == "RNN":
     #     st.write('hola')
     else:

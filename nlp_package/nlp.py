@@ -3,7 +3,7 @@ from textblob import TextBlob
 import matplotlib.pyplot as plt
 import streamlit as st
 
-class NLP_API:
+class NlpApi:
     def __init__(self, df, api=None):
         self.df = df
         # self.type_df = api
