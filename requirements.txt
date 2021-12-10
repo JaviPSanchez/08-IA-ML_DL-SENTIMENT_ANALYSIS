@@ -20,7 +20,7 @@ scikit-learn==1.0.1
 scipy==1.7.3
 six==1.16.0
 sklearn==0.0
-streamlit==0.81.1
+streamlit==1.2.0
 tenacity==8.0.1
 threadpoolctl==3.0.0
 urllib3==1.26.7
