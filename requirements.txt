@@ -28,3 +28,4 @@ Werkzeug==2.0.2
 yfinance==0.1.67
 python-dotenv==0.19.2
 wordcloud==1.8.1
+textblob==0.17.1
