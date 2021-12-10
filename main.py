@@ -1,4 +1,5 @@
 # ---------LIBRARIES------------ #
+
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -13,17 +14,15 @@ import time
 import os
 from dotenv import load_dotenv
 load_dotenv()  
-
 import twitter_package.twitter
 import google_package.google
 import wc_package.wc
 import nlp_package.nlp
 import kmeans_package.kmeans
+
 # ---------PAGE LAYOUT------------ #
 
 st.set_page_config(page_title='Crypto Dash', layout="wide", initial_sidebar_state="collapsed", page_icon='random')
-
-
 
 # ---------PAGE TITLE------------ #
 
@@ -77,8 +76,6 @@ with col6:
         st.write(tweets_api)
         # df_tweets = pd.read_csv('api_raw_tweets.csv', index_col=[0])
         # st.write(df_tweets)
-        
-
 
 with col8:
     google_form = st.form("API_GOOGLE")
