@@ -41,7 +41,7 @@ with col3:
 
 col4, col5, col6 = st.columns([1,4,1])
 with col5:
-    col5.markdown("<h2 style='text-align: center; color: white; background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>SELECT CRYPTO</h2>", unsafe_allow_html=True)
+    col5.markdown("<h2 style='text-align: center; color: white; background-color: rgba(0, 0, 0, 1); border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>SELECT CRYPTO</h2>", unsafe_allow_html=True)
     tickers = ('BTC-USD', 'ETH-USD', 'BNB-USD', 'USDT-USD', 'SOL-USD', 'ADA-USD', 'USDC-USD', 'XRP-USD', 'DOT-USD', 'LUNA-USD', 'DOGE-USD')
     crypto = col5.multiselect('Select Cryto', tickers)
     start = col5.date_input('Start date', value = pd.to_datetime('2021-01-01'))
@@ -66,10 +66,10 @@ with col8:
 col10, col11, col12 = st.columns([1,2,1])
 with col11:
     twitter_form = st.form("API_TWITTER")
-    twitter_form.markdown("<h2 style='text-align: center; width:20rem; color: white;  background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>TWITTER API</h2>", unsafe_allow_html=True)
+    twitter_form.markdown("<h2 style='text-align: center; color: white;  background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>TWITTER API</h2>", unsafe_allow_html=True)
     twitter_form.image('./assets/images/twitter.png', caption="Let's do some predictions!",  width=None, use_column_width=True)
     search_term = twitter_form.text_input("Search tweets!")
-    limit_tweets = twitter_form.slider('Select a range of tweeters',0, 1000)
+    limit_tweets = twitter_form.slider('Select a range of tweeters',0, 100)
     submit_button_twitter = twitter_form.form_submit_button("Search")
 
 
@@ -100,11 +100,12 @@ with col11:
         plt.title('Text lenght')
         st.pyplot(fig_8)
 
+    api_name = st.selectbox("Select API", (" ","twitter", "google"))
     classifier_name = st.selectbox("Select Classifier", (" ","WORD CLOUD", "NLP_TextBlob", "KMEANS", "RNN"))
 
    
     if classifier_name == 'WORD CLOUD':  
-        wc_package.wc.cloud(df_1)
+        wc_package.wc.WordCloud(df_1, api_name).run_wc()
     elif classifier_name == "NLP_TextBlob":
         nlp_package.nlp.NlpApi(df_1)
     elif classifier_name == "KMEANS":
@@ -117,7 +118,7 @@ with col11:
 col13, col14, col15 = st.columns([1,2,1])
 with col14:
     google_form = st.form("API_GOOGLE")
-    google_form.markdown("<h2 style='text-align: center; width:20rem; color: white; background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>GOOGLE API</h2>", unsafe_allow_html=True)
+    google_form.markdown("<h2 style='text-align: center; color: white; background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>GOOGLE API</h2>", unsafe_allow_html=True)
     google_form.image('./assets/images/google.png', caption="Let's do some predictions!", width=None, use_column_width=True)
     google_search = google_form.text_input("Search news!")
     date_article = google_form.date_input('Select date', value = pd.to_datetime('today'))
@@ -134,13 +135,15 @@ with col14:
         st.write(df_2)
         st.write(df_2.shape)
         fig_20 = plt.figure()
-        df_1['text'].str.len().plot(kind='hist')
+        df_2['description'].str.len().plot(kind='hist')
         plt.title('Text lenght')
         st.pyplot(fig_20)
+
+    api_name = st.selectbox("Select API*", (" ","twitter", "google"))
     classifier_name = st.selectbox("Select Classifier", (" ","WORD CLOUD", "NLP-2", "KMEANS", "RNN"))
 
     if classifier_name == 'WORD CLOUD':  
-        wc_package.wc.cloud(df_2)
+        wc_package.wc.WordCloud(df_2, api_name).run_wc()
     elif classifier_name == "NLP":
         nlp_package.nlp.NlpApi(df_2)
     elif classifier_name == "KMEANS":
