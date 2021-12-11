@@ -56,25 +56,25 @@ class Kmeans:
 
     def plot_tsne_pca(self):
         max_label = max(self.clusters)
-        max_items = np.random.choice(range(self.text.shape[0]), size=3000, replace=True)
+        max_items = np.random.choice(range(self.text.shape[0]), size=6000, replace=True)
         
         pca = PCA(n_components=2).fit_transform(self.text[max_items,:].todense())
-        tsne = TSNE().fit_transform(PCA(n_components=27).fit_transform(self.text[max_items,:].todense()))
+        tsne = TSNE().fit_transform(PCA(n_components=2).fit_transform(self.text[max_items,:].todense()))
         
         idx = np.random.choice(range(pca.shape[0]), size=100, replace=False)
         label_subset = self.clusters[max_items]
         label_subset = [cm.hsv(i/max_label) for i in label_subset[idx]]
         
-        # fig_6, ax = plt.subplots(1, 2, figsize=(14, 6))
+        
         fig_6, ax = plt.subplots(1, 1, figsize=(14, 6))
         ax.scatter(pca[idx, 0], pca[idx, 1], c=label_subset)
         ax.set_title('PCA Cluster Plot')
-        # ax[1].scatter(tsne[idx, 0], tsne[idx, 1], c=label_subset)
-        # ax[1].set_title('TSNE Cluster Plot')
         st.pyplot(fig_6)
-        fig_7, ax = plt.subplots(1,1, figsize=(14, 6))
+
+        fig_7, ax = plt.subplots(1, 1, figsize=(14, 6))
         ax.scatter(tsne[idx, 0], tsne[idx, 1], c=label_subset)
         ax.set_title('TSNE Cluster Plot')
+        st.pyplot(fig_7)
         return fig_6, fig_7
     
 

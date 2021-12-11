@@ -11,7 +11,7 @@ class ApiTwitter:
         self.query = query
         self.num_tweets = num_tweets
         self.tweety_bearer_token = os.environ.get("TWEETY_BEARER_TOKEN")
-        self.out_file = 'api_raw_tweets.csv'
+        self.out_file = './assets/database/raw_twitter_results.csv'
         self.search_url = "https://api.twitter.com/2/tweets/search/recent"
         self.query_params = {'query': self.query,
                 #'start_time': '2021-11-01T12:00:00Z',
@@ -38,7 +38,7 @@ class ApiTwitter:
             self.params['next_token'] = next_token
         response = requests.request("GET", self.search_url, headers=self.headers, params=self.query_params)
         time.sleep(3.1)
-        st.write(response.status_code)
+        # st.write(response.status_code)
         if response.status_code != 200:
             raise Exception(response.status_code, response.text)
         return response.json()
