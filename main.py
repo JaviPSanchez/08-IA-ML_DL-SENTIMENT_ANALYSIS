@@ -4,14 +4,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
-import numpy as np
-import base64
-from PIL import Image
-import requests
 import yfinance as yf
-import json
-import time
-import os
 from dotenv import load_dotenv
 load_dotenv()  
 import twitter_package.twitter
@@ -23,11 +16,11 @@ import preprocessing_package.preprocessing
 
 # ---------PAGE LAYOUT------------ #
 
-st.set_page_config(page_title='Crypto Dash', layout="wide", initial_sidebar_state="collapsed", page_icon='random')
+st.set_page_config(page_title='Crypto Dash', layout="centered", initial_sidebar_state="collapsed", page_icon='random')
 
 # ---------PAGE TITLE------------ #
 
-st.markdown("<h1 style='text-align: center; color: black;'>CRYPTO DASH</h1>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: black; background: linear-gradient(to left, #d4ac2b, #ffb003); border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>CRYPTO DASHBOARD</h2>", unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1,1,1])
 with col1:
@@ -41,21 +34,19 @@ with col3:
 
 col4, col5, col6 = st.columns([1,4,1])
 with col5:
-    col5.markdown("<h2 style='text-align: center; color: white; background-color: rgba(0, 0, 0, 1); border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>SELECT CRYPTO</h2>", unsafe_allow_html=True)
+    col5.markdown("<h2 style='text-align: center; color: black; background: linear-gradient(to left, #d4ac2b, #ffb003); border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>SELECT CRYPTO</h2>", unsafe_allow_html=True)
     tickers = ('BTC-USD', 'ETH-USD', 'BNB-USD', 'USDT-USD', 'SOL-USD', 'ADA-USD', 'USDC-USD', 'XRP-USD', 'DOT-USD', 'LUNA-USD', 'DOGE-USD')
     crypto = col5.multiselect('Select Cryto', tickers)
     start = col5.date_input('Start date', value = pd.to_datetime('2021-01-01'))
     end = col5.date_input('End date', value = pd.to_datetime('today'))
     interval = col5.selectbox('Select Interval', ('1wk', '1h'))
 
-col7, col8, col9 = st.columns([1,4,1])
-with col8:
-    def relativeReturn(df):
+def relativeReturn(df):
         relative = df.pct_change()
         cumulativeReturn = (1+relative).cumprod() - 1
         cumulativeReturn = cumulativeReturn.fillna(0)
         return cumulativeReturn
-    if len(crypto) > 0:
+if len(crypto) > 0:
         data1 = yf.download(crypto,start,end)['Adj Close']
         data2 = relativeReturn(yf.download(crypto,start,end,interval='1wk')['Adj Close'])
         st.line_chart(data1)
@@ -66,12 +57,11 @@ with col8:
 col10, col11, col12 = st.columns([1,2,1])
 with col11:
     twitter_form = st.form("API_TWITTER")
-    twitter_form.markdown("<h2 style='text-align: center; color: white;  background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>TWITTER API</h2>", unsafe_allow_html=True)
+    twitter_form.markdown("<h2 style='text-align: center; color: black; background: linear-gradient(to left, #d4ac2b, #ffb003); border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>TWITTER API</h2>", unsafe_allow_html=True)
     twitter_form.image('./assets/images/twitter.png', caption="Let's do some predictions!",  width=None, use_column_width=True)
     search_term = twitter_form.text_input("Search tweets!")
     limit_tweets = twitter_form.slider('Select a range of tweeters',0, 100)
     submit_button_twitter = twitter_form.form_submit_button("Search")
-
 
     @st.cache()
     def load_data():
@@ -81,13 +71,12 @@ with col11:
     tweets_api_load = load_data()
     st.write(tweets_api_load)
             
-
     st.write("Preprocessing:")
     twitter_preprocessing_form = st.form("TWITTER_PRE")
     submit_button_twitter_preprocessing = twitter_preprocessing_form.form_submit_button("Let's clean those nasty tweets!")
 
     if submit_button_twitter_preprocessing:
-        final_tweets = preprocessing_package.preprocessing.Preprocessing().run_preprocessing()
+        final_tweets = preprocessing_package.preprocessing.Preprocessing(tweets_api_load).run_preprocessing()
         st.write(final_tweets)
     
     uploaded_file_1 = st.file_uploader("Choose a file 1")
@@ -103,7 +92,6 @@ with col11:
     api_name = st.selectbox("Select API", (" ","twitter", "google"))
     classifier_name = st.selectbox("Select Classifier", (" ","WORD CLOUD", "NLP_TextBlob", "KMEANS", "RNN"))
 
-   
     if classifier_name == 'WORD CLOUD':  
         wc_package.wc.WordCloud(df_1, api_name).run_wc()
     elif classifier_name == "NLP_TextBlob":
@@ -118,7 +106,7 @@ with col11:
 col13, col14, col15 = st.columns([1,2,1])
 with col14:
     google_form = st.form("API_GOOGLE")
-    google_form.markdown("<h2 style='text-align: center; color: white; background-color: black; border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>GOOGLE API</h2>", unsafe_allow_html=True)
+    google_form.markdown("<h2 style='text-align: center; color: black; background: linear-gradient(to left, #d4ac2b, #ffb003); border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>GOOGLE API</h2>", unsafe_allow_html=True)
     google_form.image('./assets/images/google.png', caption="Let's do some predictions!", width=None, use_column_width=True)
     google_search = google_form.text_input("Search news!")
     date_article = google_form.date_input('Select date', value = pd.to_datetime('today'))
