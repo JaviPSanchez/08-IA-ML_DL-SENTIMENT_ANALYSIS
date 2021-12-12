@@ -10,8 +10,9 @@ import streamlit as st
 
 
 class Kmeans:
-    def __init__(self, df, api=None):
+    def __init__(self, df, api):
         self.df = df
+        self.api = api
         self.text, self.tfidf = self.kmeans()
         self.find_optimal_clusters()
         self.clusters = self.mini_Batch_Kmeans()
@@ -20,15 +21,26 @@ class Kmeans:
         self.get_top_keywords()
 
     def kmeans(self):
-        tfidf = TfidfVectorizer(
-        min_df = 5,
-        max_df = 0.95,
-        max_features = 8000,
-        stop_words = 'english'
-        )
-        tfidf.fit(self.df.Clean_Tweets)
-        text = tfidf.transform(self.df.Clean_Tweets)
-        return text, tfidf
+        if self.api=='twitter':
+            tfidf = TfidfVectorizer(
+            min_df = 5,
+            max_df = 0.95,
+            max_features = 8000,
+            stop_words = 'english'
+            )
+            tfidf.fit(self.df.Clean_Tweets)
+            text = tfidf.transform(self.df.Clean_Tweets)
+            return text, tfidf
+        if self.api=='google':
+            tfidf = TfidfVectorizer(
+            min_df = 5,
+            max_df = 0.95,
+            max_features = 8000,
+            stop_words = 'english'
+            )
+            tfidf.fit(self.df.title)
+            text = tfidf.transform(self.df.title)
+            return text, tfidf
 
     def feature_names(self):
         labels = self.tfidf.get_feature_names()

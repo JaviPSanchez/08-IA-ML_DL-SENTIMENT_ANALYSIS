@@ -4,10 +4,11 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 class NlpApi:
-    def __init__(self, df, api=None):
+    def __init__(self, df, api):
         self.df = df
-        # self.type_df = api
+        self.api = api
         self.do_nlp()
+
 
     def getAnalysis(self, score):
         if score < 0:
@@ -24,16 +25,22 @@ class NlpApi:
         return TextBlob(col_df).sentiment.polarity
 
     def do_nlp(self):
-        # if type_df == 'twitter':
-        # self.df['Subjectivity'] = self.getSubjectivity(self.df['Clean_Tweets'])
-        self.df['Subjectivity'] = self.df['Clean_Tweets'].apply(self.getSubjectivity)
-        # self.df['Polarity'] = self.getPolarity(self.df['Clean_Tweets'])
-        self.df['Polarity'] = self.df['Clean_Tweets'].apply(self.getPolarity)
-        self.compute_sentiment()
-        fig_plotbar = self.return_getplotbar()
-        fig_plotscatter = self.return_getplotscatter()
-        fig_plotcammenbert = self.return_getplotcamembert()
-        return fig_plotbar, fig_plotscatter, fig_plotcammenbert
+        if self.api=='twitter':
+            self.df['Subjectivity'] = self.df['Clean_Tweets'].apply(self.getSubjectivity)
+            self.df['Polarity'] = self.df['Clean_Tweets'].apply(self.getPolarity)
+            self.compute_sentiment()
+            fig_plotbar = self.return_getplotbar()
+            fig_plotscatter = self.return_getplotscatter()
+            fig_plotcammenbert = self.return_getplotcamembert()
+            return fig_plotbar, fig_plotscatter, fig_plotcammenbert
+        if self.api=='google':
+            self.df['Subjectivity'] = self.df['title'].apply(self.getSubjectivity)
+            self.df['Polarity'] = self.df['title'].apply(self.getPolarity)
+            self.compute_sentiment()
+            fig_plotbar = self.return_getplotbar()
+            fig_plotscatter = self.return_getplotscatter()
+            fig_plotcammenbert = self.return_getplotcamembert()
+            return fig_plotbar, fig_plotscatter, fig_plotcammenbert
         
     def compute_sentiment(self):
         # self.df['Analysis'] = self.getAnalysis(self.df['Polarity'])

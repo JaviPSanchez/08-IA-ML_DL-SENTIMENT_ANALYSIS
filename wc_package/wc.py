@@ -20,7 +20,7 @@ class WordCloud:
             plt.axis("off")
             plt.show()
             st.pyplot(fig_4)
-            # return fig_4
+            
         if self.api=='google':
             allWords = " ".join([news for news in self.df['title']])
             wordcloud2 = wordcloud.WordCloud().generate(allWords)
@@ -29,4 +29,4 @@ class WordCloud:
             plt.axis("off")
             plt.show()
             st.pyplot(fig_5)
-            # return fig_5
+            

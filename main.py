@@ -39,7 +39,7 @@ with col5:
     crypto = col5.multiselect('Select Cryto', tickers)
     start = col5.date_input('Start date', value = pd.to_datetime('2021-01-01'))
     end = col5.date_input('End date', value = pd.to_datetime('today'))
-    interval = col5.selectbox('Select Interval', ('1wk', '1h'))
+    interval = col5.selectbox('Select Interval', ('1m','2m','5m','15m','30m','60m','90m','1h','1d','5d','1wk','1mo','3mo'))
 
 def relativeReturn(df):
         relative = df.pct_change()
@@ -48,13 +48,13 @@ def relativeReturn(df):
         return cumulativeReturn
 if len(crypto) > 0:
         data1 = yf.download(crypto,start,end)['Adj Close']
-        data2 = relativeReturn(yf.download(crypto,start,end,interval='1wk')['Adj Close'])
+        data2 = relativeReturn(yf.download(crypto,start,end,interval='1d')['Adj Close'])
         st.line_chart(data1)
         st.line_chart(data2)
 
 # ---------SECTION APIs------------ #
 
-col10, col11, col12 = st.columns([1,2,1])
+col10, col11, col12 = st.columns([1,3,1])
 with col11:
     twitter_form = st.form("API_TWITTER")
     twitter_form.markdown("<h2 style='text-align: center; color: black; background: linear-gradient(to left, #d4ac2b, #ffb003); border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>TWITTER API</h2>", unsafe_allow_html=True)
@@ -95,15 +95,15 @@ with col11:
     if classifier_name == 'WORD CLOUD':  
         wc_package.wc.WordCloud(df_1, api_name).run_wc()
     elif classifier_name == "NLP_TextBlob":
-        nlp_package.nlp.NlpApi(df_1)
+        nlp_package.nlp.NlpApi(df_1, api_name)
     elif classifier_name == "KMEANS":
-        kmeans_package.kmeans.Kmeans(df_1)
+        kmeans_package.kmeans.Kmeans(df_1, api_name)
     elif classifier_name == "RNN":
         st.write('Sorry, this method is not available')
     else:
         st.write('Choose a Method')
 
-col13, col14, col15 = st.columns([1,2,1])
+col13, col14, col15 = st.columns([1,3,1])
 with col14:
     google_form = st.form("API_GOOGLE")
     google_form.markdown("<h2 style='text-align: center; color: black; background: linear-gradient(to left, #d4ac2b, #ffb003); border-radius:1rem; box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); margin:2rem;'>GOOGLE API</h2>", unsafe_allow_html=True)
@@ -128,14 +128,14 @@ with col14:
         st.pyplot(fig_20)
 
     api_name = st.selectbox("Select API*", (" ","twitter", "google"))
-    classifier_name = st.selectbox("Select Classifier", (" ","WORD CLOUD", "NLP-2", "KMEANS", "RNN"))
+    classifier_name = st.selectbox("Select Classifier", (" ","WORD CLOUD", "NLP*", "KMEANS", "RNN"))
 
     if classifier_name == 'WORD CLOUD':  
         wc_package.wc.WordCloud(df_2, api_name).run_wc()
-    elif classifier_name == "NLP":
-        nlp_package.nlp.NlpApi(df_2)
+    elif classifier_name == "NLP*":
+        nlp_package.nlp.NlpApi(df_2, api_name)
     elif classifier_name == "KMEANS":
-        kmeans_package.kmeans.Kmeans(df_2)
+        kmeans_package.kmeans.Kmeans(df_2, api_name)
     elif classifier_name == "RNN":
         st.write('Sorry, this method is not supported')
     else:
