@@ -13,6 +13,7 @@ import wc_package.wc
 import nlp_package.nlp
 import kmeans_package.kmeans
 import preprocessing_package.preprocessing
+import rnn_package.rnn
 
 # ---------PAGE LAYOUT------------ #
 
@@ -63,7 +64,7 @@ with col11:
     limit_tweets = twitter_form.slider('Select a range of tweeters',0, 100)
     submit_button_twitter = twitter_form.form_submit_button("Search")
 
-    @st.cache()
+    # @st.cache()
     def load_data():
         if submit_button_twitter:
             tweets_api = twitter_package.twitter.ApiTwitter(search_term, limit_tweets).run_api_twitter()
@@ -99,7 +100,7 @@ with col11:
     elif classifier_name == "KMEANS":
         kmeans_package.kmeans.Kmeans(df_1, api_name)
     elif classifier_name == "RNN":
-        st.write('Sorry, this method is not available')
+        rnn_package.rnn.Rnn(df_1, api_name)
     else:
         st.write('Choose a Method')
 
@@ -137,7 +138,7 @@ with col14:
     elif classifier_name == "KMEANS":
         kmeans_package.kmeans.Kmeans(df_2, api_name)
     elif classifier_name == "RNN":
-        st.write('Sorry, this method is not supported')
+        rnn_package.rnn.Rnn(df_2, api_name)
     else:
         st.write('Choose a Method')
 
