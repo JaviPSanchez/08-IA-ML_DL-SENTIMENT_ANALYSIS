@@ -1,3 +1,6 @@
+-f https://download.pytorch.org/whl/torch_stable.html
+torch==1.8.1+cpu 
+torchvision==0.9.1+cpu
 Brotli==1.0.9
 certifi==2021.10.8
 charset-normalizer==2.0.8
@@ -29,5 +32,3 @@ python-dotenv==0.19.2
 wordcloud==1.8.1
 textblob==0.17.1
 newsapi-python==0.2.6
-pytorch-cpu==1.8.1
-torchvision-cpu==0.9.1
