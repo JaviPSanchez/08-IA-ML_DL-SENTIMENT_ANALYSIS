@@ -29,5 +29,5 @@ python-dotenv==0.19.2
 wordcloud==1.8.1
 textblob==0.17.1
 newsapi-python==0.2.6
-pytorc-cpu==1.8.1
+pytorch-cpu==1.8.1
 torchvision-cpu==0.9.1
