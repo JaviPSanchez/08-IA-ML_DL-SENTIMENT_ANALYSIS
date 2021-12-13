@@ -13,7 +13,7 @@ import wc_package.wc
 import nlp_package.nlp
 import kmeans_package.kmeans
 import preprocessing_package.preprocessing
-# import rnn_package.rnn
+import rnn_package.rnn
 
 # ---------PAGE LAYOUT------------ #
 
@@ -100,8 +100,8 @@ with col11:
     elif classifier_name == "KMEANS":
         kmeans_package.kmeans.Kmeans(df_1, api_name)
     elif classifier_name == "RNN":
-        # rnn_package.rnn.Rnn(df_1, api_name)
-        st.write('Not supportted in this version')
+        rnn_package.rnn.Rnn(df_1, api_name)
+        # st.write('Not supportted in this version')
     else:
         st.write('Choose a Method')
 
@@ -139,8 +139,8 @@ with col14:
     elif classifier_name == "KMEANS":
         kmeans_package.kmeans.Kmeans(df_2, api_name)
     elif classifier_name == "RNN":
-        # rnn_package.rnn.Rnn(df_2, api_name)
-        st.write('Not supportted in this version')
+        rnn_package.rnn.Rnn(df_2, api_name)
+        # st.write('Not supportted in this version')
     else:
         st.write('Choose a Method')
 
