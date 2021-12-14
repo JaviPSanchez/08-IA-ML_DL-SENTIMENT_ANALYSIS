@@ -1,42 +1,50 @@
 import pandas as pd
 import re
 import json
+import streamlit as st
 
 class Preprocessing:
-    def __init__(self, df):
+    def __init__(self, df, api=None):
         self.df = df
-        self.formatted_df = self.read_df()
-        self.data = self.create_df()
-        self.df_ready_en = self.drop_columns()
-        self.df_filtered = self.tweets_filter()
+        # self.api = api
+        # self.formatted_df = self.read_df()
+        # self.data = self.create_df()
+        self.df_final = self.drop_columns()
+        # st.write(self.df_final)
+        self.df_final = self.df_final.reset_index(drop=True)
+        st.write(self.df_final)
 
-    
-    def run_preprocessing(self):
-        self.read_df = self.read_df()
-        self.create_df = self.create_df()
-        self.drop_columns = self.drop_columns()
-        self.filter_tweets = self.tweets_filter(self.df_ready_en)
-        self.df_final = self.df_final()
-        return self.df_final
+        self.df_export = self.tweets_filter(self.df_final)
+        st.write(self.df_export)
+        # self.final = self.export_df()
+        # return self.final
 
-    def read_df(self):
-        tweets = []
-        with open(self.df, 'r') as f:
-            for row in f.readlines():
-                tweet = json.loads(row)
-                tweets.append(tweet)
-        return tweets
+    # def run_preprocessing(self):
+    #     self.read_df = self.read_df()
+    #     self.create_df = self.create_df()
+    #     self.drop_columns = self.drop_columns()
+    #     self.filter_tweets = self.tweets_filter(self.df_final)
+    #     self.df_final = self.df_final()
+    #     return self.df_final
+
+    # def read_df(self):
+    #     tweets = []
+    #     with open(self.df, 'r') as f:
+    #         for row in f.readlines():
+    #             tweet = json.loads(row)
+    #             tweets.append(tweet)
+    #     return tweets
     
-    def create_df(self):
-        data = pd.DataFrame(self.formatted_df)
-        return data
+    # def create_df(self):
+    #     data = pd.DataFrame(self.formatted_df)
+    #     return data
     
     def drop_columns(self):
-        df_ready = self.data[['lang','text']]
+        df_ready = self.df[['lang','text']]
         df_ready_en = df_ready[df_ready['lang'] == 'en']
         return df_ready_en
     
-    def tweets_filter(self, tamiz):
+    def tweets_filter(tamiz):
         tamiz = re.sub('#bitcoin', 'bitcoin', tamiz)
         tamiz = re.sub('#Bitcoin', 'Bitcoin', tamiz)
         tamiz = re.sub('#[A-Za-z0-9]+', '', tamiz)
@@ -47,11 +55,13 @@ class Preprocessing:
         tamiz = re.sub(r':[\s]+', '', tamiz)
         tamiz = re.sub('[^A-Za-z0-9]+', ' ', tamiz)
         tamiz = tamiz.lower()
-        return tamiz
+        st.write(tamiz)
+        # return self.df_final
 
     def export_df(self):
-        df_final['Clean_Tweets'] = self.df_filtered['text'].apply(self.df_filtered)
-        return df_final
+        # self.df_filtered['Clean_Tweets'] = self.df_filtered['text'].apply(self.df_filtered)
+        self.df_filtered['Clean_Tweets'] = self.df_filtered['text'].apply(self.df_filtered)
+        return self.df_filtered
 
 
 

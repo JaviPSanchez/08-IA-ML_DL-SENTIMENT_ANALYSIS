@@ -1,6 +1,7 @@
 # ---------LIBRARIES------------ #
 
 import streamlit as st
+# import pickle
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
@@ -64,12 +65,13 @@ with col11:
     limit_tweets = twitter_form.slider('Select a range of tweeters',0, 100)
     submit_button_twitter = twitter_form.form_submit_button("Search")
 
-    # @st.cache()
     def load_data():
         if submit_button_twitter:
             tweets_api = twitter_package.twitter.ApiTwitter(search_term, limit_tweets).run_api_twitter()
             return tweets_api
     tweets_api_load = load_data()
+    # tweets_data = preprocessing_package.preprocessing.Preprocessing(tweets_api_load)
+    
     st.write(tweets_api_load)
             
     st.write("Preprocessing:")
@@ -77,8 +79,9 @@ with col11:
     submit_button_twitter_preprocessing = twitter_preprocessing_form.form_submit_button("Let's clean those nasty tweets!")
 
     if submit_button_twitter_preprocessing:
-        final_tweets = preprocessing_package.preprocessing.Preprocessing(tweets_api_load).run_preprocessing()
-        st.write(final_tweets)
+        # final_tweets = preprocessing_package.preprocessing.Preprocessing(tweets_api_load).run_preprocessing()
+        # final_tweets = tweets_data.run_preprocessing()
+        st.write('Available in Version 2')
     
     uploaded_file_1 = st.file_uploader("Choose a file 1")
     if uploaded_file_1 is not None:
@@ -117,6 +120,10 @@ with col14:
     if submit_button_google:
         news_api = google_package.google.ApiGoogleNews(google_search, date_article).run_api_google()
         st.write(news_api)
+
+    st.write("Preprocessing:")
+    google_preprocessing_form = st.form("GOOGLE_PRE")
+    submit_button_google_preprocessing = google_preprocessing_form.form_submit_button("Let's clean those articles!")
 
     uploaded_file_2 = st.file_uploader("Choose a file 2")
 
